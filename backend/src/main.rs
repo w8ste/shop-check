@@ -1,10 +1,11 @@
-use axum::{routing::get, Router, response::Json, extract::Json as AxumJson};
+mod handle_purchases;
+
+use axum::{routing::get, Router};
 use std::net::SocketAddr;
 use axum::routing::post;
-use serde::{Deserialize, Serialize};
-use serde_json::json;
 use tracing_subscriber;
 
+use crate::handle_purchases::handlers::{root, get_purchases, add_purchase};
 #[tokio::main]
 async fn main() {
     tracing_subscriber::fmt::init();
@@ -21,30 +22,4 @@ async fn main() {
     axum::serve(listener, app).await.unwrap();
 }
 
-async fn root() -> &'static str {
-    tracing::info!("Running backend root");
-    "Rust Backend Running!"
-}
 
-async fn get_purchases() -> Json<serde_json::Value> {
-    tracing::info!("Running backend get_purchases");
-    Json(json!({ "purchases": [] })) // Placeholder
-}
-
-#[derive(Deserialize)]
-struct Purchase {
-    item: String,
-}
-
-#[derive(Serialize)]
-struct PurchaseResponse {
-    message: String,
-}
-
-// Handle POST request to /purchase
-async fn add_purchase(AxumJson(payload): AxumJson<Purchase>) -> Json<PurchaseResponse> {
-    tracing::info!("Received purchase: {}", payload.item);
-    Json(PurchaseResponse {
-        message: format!("Added purchase: {}", payload.item),
-    })
-}
