@@ -2,16 +2,16 @@
 
 ## **Backend**
 - **Language:** Rust  
-- **Framework:** Axum (lightweight and async) or Actix-Web (high-performance)  
-- **Database:** SQLite (with `rusqlite`) or PostgreSQL (with `sqlx`)  
+- **Framework:** Axum (lightweight and async)
+- **Database:** PostgreSQL (with `sqlx`)  
 - **ORM:** `sea-orm` (async and feature-rich) or `diesel` (type-safe but heavier)  
 - **Serialization:** `serde` (for JSON handling)  
-- **API Format:** REST (Axum/Actix) or gRPC (`tonic` for high-performance communication)  
-
+- **API Format:** REST (Axum/Actix)  
+- **Optical Character Recognition (OCR)** tesseract-rs
 ## **Frontend**
 - **Framework:** Dash (for simplicity and Python integration)  
 - **Alternative:** Svelte (lightweight) or React (more complex but flexible)  
-- **Visualization:** Plotly (works well with Dash)  
+  
 
 ## **Hosting & Security**
 - **Web Server:** Nginx (reverse proxy for Rust backend)  
