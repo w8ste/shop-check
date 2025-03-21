@@ -1,10 +1,9 @@
-import dash
 from dash import dcc, html, Input, Output, State
 import requests
 from datetime import datetime
 
-from .config import app
-from .sql import fetch_data
+from app import app
+from sql import fetch_data
 
 
 @app.callback(
@@ -40,5 +39,14 @@ def update_purchase_table(n_intervals):
                                               datetime.strptime(x, "%Y-%m-%d %H:%M:%S")
                                               .strftime("%H:%M:%S %d.%m.%Y")
                                               )
-
+    print("update")
     return df.to_dict('records')
+
+@app.callback(
+    Output("pin-modal", "is_open"),
+    [Input("open-modal-btn", "n_clicks"), Input("close-modal-btn", "n_clicks")],
+    prevent_initial_call=True
+)
+def toggle_modal(open_clicks, close_clicks):
+    print("open model")
+    return open_clicks > close_clicks
