@@ -1,8 +1,11 @@
 import dash
 from dash import dcc, html, Input, Output, State
 import requests
+from datetime import datetime
 
 from .config import app
+from .sql import fetch_data
+
 
 @app.callback(
     [Output("product-input", "value"),
@@ -17,7 +20,6 @@ def send_purchase(n_clicks, product, price):
     if not product:
         return "", "", "Please enter a purchase."
 
-    # Send the purchase data to the backend
     try:
         res = requests.post("http://127.0.0.1:8080/purchase", json={"product": product, "price": price})
         if res.status_code == 200:
@@ -26,3 +28,17 @@ def send_purchase(n_clicks, product, price):
             return "", "", f"Error: {res.text}"
     except Exception as e:
         return "", "", f"Request failed: {e}"
+
+@app.callback(
+    Output("purchase_table", "data"),
+    Input("interval-update", "n_intervals"))
+def update_purchase_table(n_intervals):
+    df = fetch_data()
+
+
+    df["created_at"] = df["created_at"].apply(lambda x:
+                                              datetime.strptime(x, "%Y-%m-%d %H:%M:%S")
+                                              .strftime("%H:%M:%S %d.%m.%Y")
+                                              )
+
+    return df.to_dict('records')
