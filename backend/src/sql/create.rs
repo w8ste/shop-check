@@ -61,7 +61,7 @@ pub async fn add_product(pool: &Pool<Sqlite>, product: &String, price: f64) -> R
             Ok(n) => n,
             Err(_) => row.get::<i64, _>("number") as f64,
         };
-        let created_at: String = row.get("created_at");  // The timestamp as a string
+        let created_at: String = row.get("created_at");
         tracing::info!(created_at);
 
         let created_at = match NaiveDateTime::parse_from_str(&created_at, "%Y-%m-%d %H:%M:%S") {

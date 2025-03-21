@@ -24,4 +24,7 @@ Thumbs.db
 *.swp
 
 # Database
-./backend/dbs/
+/backend/dbs/
+
+# Uploads
+/frontend/uploads/

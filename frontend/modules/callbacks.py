@@ -1,16 +1,18 @@
 from dash import dcc, html, Input, Output, State
 import requests
+import os
+import base64
 from datetime import datetime
 
 from app import app
-from sql import fetch_data
+from .sql import fetch_data
 
 
 @app.callback(
     [Output("product-input", "value"),
      Output("price-input", "value"),
      Output("response-message", "children")],
-    Input("submit-button", "n_clicks"),
+    Input("submit-button-footer", "n_clicks"),
     [State("product-input", "value"),
      State("price-input", "value")],
     prevent_initial_call=True
@@ -50,3 +52,27 @@ def update_purchase_table(n_intervals):
 def toggle_modal(open_clicks, close_clicks):
     print("open model")
     return open_clicks > close_clicks
+
+@app.callback(
+    Output("output-data-upload", "children"),
+    Input("upload-purchase", "contents"),
+    State("upload-purchase", "filename"),
+    prevent_initial_call=True)
+def handle_image_upload(contents, filename):
+    os.makedirs("./uploads", exist_ok=True)
+
+    if contents is not None:
+        file_path = os.path.join("./uploads", filename[0])
+        content_type, content_string = contents[0].split(',')
+        decoded = base64.b64decode(content_string)
+
+        if not (file_path.lower().endswith(".png")):
+            return html.Div(["Error: Only PNG files are allowed."])
+        try:
+            with open(file_path, "wb") as f:
+                f.write(decoded)
+
+            return html.Div([f"File {filename[0]} uploaded and saved successfully!"])
+        except Exception as e:
+            return html.Div([f"Error saving file: {e}"])
+    return html.Div(["No file uploaded."])

@@ -5,7 +5,7 @@ import dash_bootstrap_components as dbc
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 app.title = 'Shop-Check'
 
-
+from modules.callbacks import *
 def main():
 
     app.layout = init_layout()

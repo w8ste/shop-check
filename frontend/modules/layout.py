@@ -6,28 +6,35 @@ def init_layout():
     pin_modal = dbc.Modal(
         [
             dbc.ModalHeader(
-                html.H2("Access Control Panel", style={"text-align": "center"})
+                html.H2("Add Purchase", style={"text-align": "center"})
             ),
             dbc.ModalBody(
                 [
-                    html.P(
-                        id="modal-message",
-                        children="Enter your PIN to switch roles.",
-                        style={"text-align": "center", "margin-bottom": "15px"}
-                    ),
-                    dcc.Input(
-                        id="pin-input",
-                        type="password",
-                        placeholder="Enter PIN",
-                        maxLength=4,
-                        pattern="[0-9]*",
-                        className="pin-input"
-                    ),
-                    html.P(
-                        id="error-message",
-                        children="Invalid PIN. Please try again.",
-                        style={"color": "red", "display": "none", "font-size": "14px", "text-align": "center"},
-                    ),
+                    dcc.Input(id="product-input", type="text", placeholder="Enter purchase"),
+                    dcc.Input(id="price-input", type="number", placeholder="price"),
+                    html.Div(id="response-message",
+                             style={"color": "red", "display": "none", "font-size": "14px", "text-align": "center"}),
+                    html.Div([
+                        html.H5("or", style={"text-align": "center"}),
+                        dcc.Upload(
+                            id="upload-purchase",
+                            multiple=True,
+                            children=html.Div(["Drag and drop or click to select files"]),
+                            style={
+                                'width': '100%',
+                                'height': '100px',
+                                'lineHeight': '100px',
+                                'borderWidth': '1px',
+                                'borderStyle': 'dashed',
+                                'borderRadius': '5px',
+                                'textAlign': 'center',
+                                'backgroundColor': '#f1f1f1',
+                                'cursor': 'pointer'
+                            },
+                            accept="image/png",
+                        ),
+                        html.Div(id="output-data-upload"),
+                    ])
                 ]
             ),
             dbc.ModalFooter(
@@ -46,12 +53,10 @@ def init_layout():
 
         html.H1("Shop Check", style={'text-align': 'center'}),
 
-        dbc.Button("Open Form", id="open-modal-btn", n_clicks=0),
+        dbc.Button("Add purchase +", id="open-modal-btn", n_clicks=0),
+
         html.Div([pin_modal]),
-        dcc.Input(id="product-input", type="text", placeholder="Enter purchase"),
-        dcc.Input(id="price-input", type="number", placeholder="price"),
-        html.Button("Submit", id="submit-button", n_clicks=0),
-        html.Div(id="response-message"),
+
         dash_table.DataTable(
             id='purchase_table',
             columns=[
