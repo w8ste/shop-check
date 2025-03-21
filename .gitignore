@@ -23,3 +23,5 @@ Thumbs.db
 .idea/
 *.swp
 
+# Database
+./backend/dbs

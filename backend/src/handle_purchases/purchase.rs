@@ -2,7 +2,8 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize)]
 pub struct Purchase {
-    pub(crate) item: String,
+    pub(crate) product: String,
+    pub(crate) price: f64,
 }
 
 #[derive(Serialize)]

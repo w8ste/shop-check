@@ -5,7 +5,8 @@ def init_layout():
     app_layout = html.Div([
         html.H1("Shop Check"),
 
-        dcc.Input(id="purchase-input", type="text", placeholder="Enter purchase"),
+        dcc.Input(id="product-input", type="text", placeholder="Enter purchase"),
+        dcc.Input(id="price-input", type="number", placeholder="price"),
         html.Button("Submit", id="submit-button", n_clicks=0),
 
         # Display response from backend
