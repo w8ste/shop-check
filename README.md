@@ -1,4 +1,4 @@
-# Tech Stack for Purchase Tracking App (Raspberry Pi)
+# Tech Stack
 
 ## **Backend**
 - **Language:** Rust  
