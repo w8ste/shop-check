@@ -3,7 +3,7 @@ import dash_bootstrap_components as dbc
 
 
 def init_layout():
-    pin_modal = dbc.Modal(
+    purchase_modal = dbc.Modal(
         [
             dbc.ModalHeader(
                 html.H2("Add Purchase", style={"text-align": "center"})
@@ -12,7 +12,7 @@ def init_layout():
                 [
                     dcc.Input(id="product-input", type="text", placeholder="Enter purchase"),
                     dcc.Input(id="price-input", type="number", placeholder="price"),
-                    html.Div(id="response-message",
+                    html.Div(id="response-message-purchase",
                              style={"color": "red", "display": "none", "font-size": "14px", "text-align": "center"}),
                     html.Div([
                         html.H5("or", style={"text-align": "center"}),
@@ -39,23 +39,67 @@ def init_layout():
             ),
             dbc.ModalFooter(
                 [
-                    dbc.Button("Submit", id="submit-button-footer", className="btn-primary", n_clicks=0),
-                    dbc.Button("Close", id="close-modal-btn", n_clicks=0, color="secondary"),
+                    dbc.Button("Submit", id="submit-button-footer-purchase", className="btn-primary", n_clicks=0),
+                    dbc.Button("Close", id="close-modal-btn-purchase", n_clicks=0, color="secondary"),
                 ]
             ),
         ],
-        id="pin-modal",
+        id="purchase-modal",
         is_open=False,
-        className="custom-modal"
+        className="purchase-modal"
+    )
+
+    budget_modal = dbc.Modal(
+        [
+            dbc.ModalHeader(
+                html.H2("Set budget", style={"text-align": "center"})
+            ),
+            dbc.ModalBody(
+                [
+                    dcc.Input(id="budget-input", type="number", placeholder="Set budget"),
+                    html.Div(id="response-message-budget",
+                             style={"color": "red", "display": "none", "font-size": "14px", "text-align": "center"}),
+                ]
+            ),
+            dbc.ModalFooter(
+                [
+                    dbc.Button("Submit", id="submit-button-footer-budget", className="btn-primary-budget", n_clicks=0),
+                    dbc.Button("Close", id="close-modal-btn-budget", n_clicks=0, color="secondary"),
+                ]
+            ),
+        ],
+        id="budget-modal",
+        is_open=False,
+        className="budget-modal"
+
     )
 
     app_layout = html.Div([
 
         html.H1("Shop Check", style={'text-align': 'center'}),
 
-        dbc.Button("Add purchase +", id="open-modal-btn", n_clicks=0),
-
-        html.Div([pin_modal]),
+        html.Div([
+            purchase_modal,
+            budget_modal,
+            html.Div([
+                dbc.Row(
+                    dbc.Col(
+                        html.Div([
+                            dbc.Button("Add purchase +", id="open-modal-btn-purchase", n_clicks=0),
+                            dbc.Button("Set budget", id="open-modal-btn-budget", n_clicks=0),
+                            dbc.Button("Synchronize PayPal", id="sync_pay_pal-btn", n_clicks=0),
+                            html.Div(id="response-message-paypal",
+                                     style={"color": "red", "display": "none", "font-size": "14px",
+                                            "text-align": "center"}),
+                        ], style={"display": "flex", "justify-content": "center",
+                                  "gap": "5px", "margin-bottom": "10px"}),
+                        width="auto"
+                    ),
+                    justify="center",
+                    align="center"
+                )
+            ]),
+        ]),
 
         dash_table.DataTable(
             id='purchase_table',
@@ -70,6 +114,8 @@ def init_layout():
             style_header={'backgroundColor': '#f1f1f1', 'fontWeight': 'bold'},
             style_data={'whiteSpace': 'normal', 'height': 'auto'},
         ),
+
+        dcc.Graph(id="purchase-chart"),
 
         dcc.Interval(
             id="interval-update",

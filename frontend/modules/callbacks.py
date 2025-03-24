@@ -3,16 +3,17 @@ import requests
 import os
 import base64
 from datetime import datetime
+import json
 
-from app import app
+from app import app, config
 from .sql import fetch_data
-
+from .plotting import plot_purchases
 
 @app.callback(
     [Output("product-input", "value"),
      Output("price-input", "value"),
-     Output("response-message", "children")],
-    Input("submit-button-footer", "n_clicks"),
+     Output("response-message-purchase", "children")],
+    Input("submit-button-footer-purchase", "n_clicks"),
     [State("product-input", "value"),
      State("price-input", "value")],
     prevent_initial_call=True
@@ -31,27 +32,71 @@ def send_purchase(n_clicks, product, price):
         return "", "", f"Request failed: {e}"
 
 @app.callback(
+    Output("response-message-paypal", "children"),
+    Input("sync_pay_pal-btn", "n_clicks"),
+)
+def sync_pay_pal(n_clicks):
+    try:
+        res = requests.post("http://127.0.0.1:8080/sync_paypal")
+        if res.status_code == 200:
+            return "Synchronized successfully!"
+        else:
+            return "Unable to synchronize PayPal right now, try again later!"
+    except Exception as e:
+        return f"Request failed: {e}"
+
+
+@app.callback(
     Output("purchase_table", "data"),
     Input("interval-update", "n_intervals"))
 def update_purchase_table(n_intervals):
     df = fetch_data()
 
 
-    df["created_at"] = df["created_at"].apply(lambda x:
-                                              datetime.strptime(x, "%Y-%m-%d %H:%M:%S")
-                                              .strftime("%H:%M:%S %d.%m.%Y")
-                                              )
-    print("update")
     return df.to_dict('records')
 
 @app.callback(
-    Output("pin-modal", "is_open"),
-    [Input("open-modal-btn", "n_clicks"), Input("close-modal-btn", "n_clicks")],
+    Output("purchase-modal", "is_open"),
+    [Input("open-modal-btn-purchase", "n_clicks"),
+     Input("close-modal-btn-purchase", "n_clicks")],
     prevent_initial_call=True
 )
-def toggle_modal(open_clicks, close_clicks):
-    print("open model")
-    return open_clicks > close_clicks
+def toggle_modal_purchase(open_clicks, close_clicks):
+    config.is_purchase_modal_open = not config.is_purchase_modal_open
+    return config.is_purchase_modal_open
+
+@app.callback(
+    Output("budget-modal", "is_open"),
+    [Input("open-modal-btn-budget", "n_clicks"),
+     Input("close-modal-btn-budget", "n_clicks")],
+    prevent_initial_call=True
+)
+def toggle_modal_budget(open_clicks, close_clicks):
+    config.is_budget_modal_open = not config.is_budget_modal_open
+    return config.is_budget_modal_open
+
+@app.callback(
+    Output("response-message-budget", "children"),
+    Input("submit-button-footer-budget", "n_clicks"),
+    State("budget-input", "value"),
+    prevent_initial_call=True
+)
+def set_budget(n_clicks, budget):
+    month_year = datetime.now().strftime("%m_%Y")
+    if os.path.exists(config.budget_path):
+        with open(config.budget_path, "r") as file:
+            try:
+                data = json.load(file)
+            except json.JSONDecodeError:
+                data = {}
+    else:
+        data = {}
+
+    data[month_year] = budget
+    with open(config.budget_path, "w") as file:
+        json.dump(data, file, indent=4)
+
+    return f"{budget}$ has been set as the new budget."
 
 @app.callback(
     Output("output-data-upload", "children"),
@@ -76,3 +121,10 @@ def handle_image_upload(contents, filename):
         except Exception as e:
             return html.Div([f"Error saving file: {e}"])
     return html.Div(["No file uploaded."])
+
+@app.callback(
+    Output("purchase-chart", "figure"),
+    Input("interval-update", "n_intervals"),
+)
+def update_purchase_history_chart(n_intervals):
+    return plot_purchases()
