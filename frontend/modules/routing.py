@@ -1,6 +1,6 @@
 import requests
 
-from config import app
+from app import app
 
 @app.server.route("/purchases")  # Proxy to Axum
 def proxy_purchases():

@@ -32,3 +32,9 @@ pub async fn add_purchase(
         }
     }
 }
+
+/// Handle POST request to /sync_paypal
+pub async fn sync_paypal() {
+    tracing::info!("Running backend sync_paypal");
+    
+}

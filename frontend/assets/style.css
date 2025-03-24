@@ -1,0 +1,88 @@
+@font-face {
+    font-family: 'NerdFont';
+    src: url('/assets/fonts/0xProtoNerdFont-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.purchase-modal .modal-dialog {
+    max-width: 500px;
+    margin: 1.75rem auto;
+}
+
+.purchase-modal .modal-content {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: none;
+}
+
+.purchase-modal .modal-header {
+    border-bottom: none;
+    padding: 20px;
+    background-color: #0000FF;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.purchase-modal .modal-body {
+    padding: 20px;
+}
+
+.purchase-modal .modal-footer {
+    border-top: none;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+
+.budget-modal .modal-dialog {
+    max-width: 500px;
+    margin: 1.75rem auto;
+}
+
+.budget-modal .modal-content {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: none;
+}
+
+.budget-modal .modal-header {
+    border-bottom: none;
+    padding: 20px;
+    background-color: #0000FF;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.budget-modal .modal-body {
+    padding: 20px;
+}
+
+.budget-modal .modal-footer {
+    border-top: none;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+#upload-data {
+    width: 100%;
+    height: 100px;
+    line-height: 100px;
+    border: 2px dashed #cccccc;
+    border-radius: 10px;
+    text-align: center;
+    background-color: #f8f9fa;
+    cursor: pointer;
+}
+
+#upload-data:hover {
+    background-color: #f1f1f1;
+}
