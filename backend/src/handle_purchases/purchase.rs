@@ -10,3 +10,13 @@ pub struct Purchase {
 pub struct PurchaseResponse {
     pub(crate) message: String,
 }
+
+#[derive(Deserialize)]
+pub struct PayPalTransaction {
+
+}
+
+#[derive(Serialize)]
+pub struct PayPalTransactionResponse {
+    pub(crate) massage: String,
+}
