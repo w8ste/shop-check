@@ -1,13 +1,17 @@
-from dash import dcc, html, Input, Output, State
+from dash import html, Input, Output, State
 import requests
 import os
 import base64
 from datetime import datetime
 import json
 
-from app import app, config
+from app import app
+from .config import Config
 from .sql import fetch_data
 from .plotting import plot_purchases
+
+config = Config()
+
 
 @app.callback(
     [Output("product-input", "value"),
@@ -34,6 +38,7 @@ def send_purchase(n_clicks, product, price):
 @app.callback(
     Output("response-message-paypal", "children"),
     Input("sync_pay_pal-btn", "n_clicks"),
+    prevent_initial_call=True,
 )
 def sync_pay_pal(n_clicks):
     try:
@@ -50,9 +55,7 @@ def sync_pay_pal(n_clicks):
     Output("purchase_table", "data"),
     Input("interval-update", "n_intervals"))
 def update_purchase_table(n_intervals):
-    df = fetch_data()
-
-
+    df = fetch_data(config)
     return df.to_dict('records')
 
 @app.callback(
@@ -123,8 +126,25 @@ def handle_image_upload(contents, filename):
     return html.Div(["No file uploaded."])
 
 @app.callback(
+    [Output("month_dd", "options")],
+    [Input("interval-update","n_intervals")],
+)
+def update_month_dd(n_intervals):
+    dirs = os.listdir("../backend/dbs")
+    return [[dirs[i] for i in range(len(dirs))]]
+
+@app.callback(
+    [Input("month_dd", "value")],
+    prevent_initial_call=True,
+)
+def select_db_from_dd(month_dd):
+    config.selected_db = month_dd
+    config.update_month_and_year()
+
+
+@app.callback(
     Output("purchase-chart", "figure"),
     Input("interval-update", "n_intervals"),
 )
 def update_purchase_history_chart(n_intervals):
-    return plot_purchases()
+    return plot_purchases(config)

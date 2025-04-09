@@ -2,7 +2,7 @@ from dash import html, dcc, dash_table
 import dash_bootstrap_components as dbc
 
 
-def init_layout():
+def init_layout(config):
     purchase_modal = dbc.Modal(
         [
             dbc.ModalHeader(
@@ -74,6 +74,14 @@ def init_layout():
 
     )
 
+    select_month_dropdown = dcc.Dropdown(
+        id="month_dd",
+        multi=False,
+        clearable=True,
+        disabled=False,
+        value=config.selected_db,
+    )
+
     app_layout = html.Div([
 
         html.H1("Shop Check", style={'text-align': 'center'}),
@@ -87,7 +95,8 @@ def init_layout():
                         html.Div([
                             dbc.Button("Add purchase +", id="open-modal-btn-purchase", n_clicks=0),
                             dbc.Button("Set budget", id="open-modal-btn-budget", n_clicks=0),
-                            dbc.Button("Synchronize PayPal", id="sync_pay_pal-btn", n_clicks=0),
+                            dbc.Button("Synchronize PayPal", id="sync_pay_pal-btn", className="btn-pp", n_clicks=0),
+                            select_month_dropdown,
                             html.Div(id="response-message-paypal",
                                      style={"color": "red", "display": "none", "font-size": "14px",
                                             "text-align": "center"}),

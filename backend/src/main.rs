@@ -40,8 +40,8 @@ async fn main() {
         )
         .get_matches();
 
+
     tracing_subscriber::fmt::init();
-    tracing::info!("{}", matches.contains_id("activate_paypal"));
 
     let pool = match init_sql_support().await {
         Ok(pool) => pool,
@@ -50,9 +50,9 @@ async fn main() {
 
     let app = Router::new()
         .route("/", get(root))
-        .route("/purchases", get(get_purchases))
-        .route("/purchase", post(add_purchase))
         .route("/sync_paypal", post(sync_paypal))
+        .route("/purchase", post(add_purchase))
+        .route("/purchases", post(get_purchases))
         .layer(Extension(pool));
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 8080)); // Localhost for testing

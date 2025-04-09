@@ -8,9 +8,14 @@ pub async fn root() -> &'static str {
     "Rust Backend Running!"
 }
 
-pub async fn get_purchases() -> Json<serde_json::Value> {
+pub async fn get_purchases() {
     tracing::info!("Running backend get_purchases");
-    Json(json!({ "purchases": [] })) // Placeholder
+}
+
+
+/// Handle POST request to /sync_paypal
+pub async fn sync_paypal() {
+    tracing::info!("Running backend sync_paypal");
 }
 
 // Handle POST request to /purchase
@@ -33,8 +38,3 @@ pub async fn add_purchase(
     }
 }
 
-/// Handle POST request to /sync_paypal
-pub async fn sync_paypal() {
-    tracing::info!("Running backend sync_paypal");
-    
-}

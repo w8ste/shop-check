@@ -86,3 +86,7 @@
 #upload-data:hover {
     background-color: #f1f1f1;
 }
+
+#month_dd {
+    width:150px;
+}
